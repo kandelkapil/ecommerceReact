@@ -5,7 +5,6 @@ export default class Products extends Component {
     render() {
         return (
             <div>
-
                 <ul className='products'>
                     {this.props.product.map((product) => (
 
