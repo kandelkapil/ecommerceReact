@@ -16,6 +16,13 @@ class App extends React.Component {
         }
     }
 
+    removeFromCart = (product) => {
+        const cartItems = this.state.cartItems.slice();
+        const filteredCartitems = cartItems.filter((item) => item._id !== product._id);
+        this.setState({ cartItems: filteredCartitems })
+
+    }
+
     addToCart = (product) => {
         const cartItems = this.state.cartItems.slice();
 
@@ -104,10 +111,16 @@ class App extends React.Component {
                                 sortProducts={this.sortProducts}
                             >
                             </Filter>
-                            <Products product={this.state.products} addToCart={this.addToCart} />
+                            <Products
+                                product={this.state.products}
+                                addToCart={this.addToCart}
+
+                            />
                         </div>
                         <div className="sidebar">
-                            <Cart cartItems={this.state.cartItems} />
+                            <Cart
+                                cartItems={this.state.cartItems}
+                                removeFromCart={this.removeFromCart} />
                         </div>
                     </div>
                 </main>
