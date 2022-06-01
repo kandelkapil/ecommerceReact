@@ -14,14 +14,16 @@ mongoose.connect(
 )
 
 const Product = mongoose.model(
-    "products", new mongoose.Schema({
+    "products",
+    new mongoose.Schema({
         _id: { type: String, default: shortid.generate },
         title: String,
         description: String,
         image: String,
         price: Number,
         availableSizes: [String],
-    }))
+    })
+);
 
 app.get("/api/products", async (req, res) => {
     const products = await Product.find({});
