@@ -3,13 +3,19 @@ import formatCurrency from '../util'
 import Fade from 'react-reveal/Fade'
 import Modal from 'react-modal';
 import Zoom from 'react-reveal/Zoom';
-
-export default class Products extends Component {
+import { connect } from 'react-redux';
+import { fetchProducts } from '../actions/productActions'
+import { addToCart } from '../actions/cartActions'
+class Products extends Component {
     constructor(props) {
         super(props);
         this.state = {
             product: null
         }
+    }
+
+    componentDidMount() {
+        this.props.fetchProducts();
     }
 
     openModal = (product) => {
@@ -27,33 +33,40 @@ export default class Products extends Component {
         return (
             <div>
                 <Fade bottom cascade>
-                    <ul className='products'>
-                        {this.props.product.map((product) => (
 
-                            <li key={product._id}>
-                                <div className="product">
-                                    <a href={"#" + product._id} onClick={() => this.openModal(product)} >
-                                        <img src={product.image} alt={product.title} />
-                                        <p>
-                                            {product.title}
-                                        </p>
-                                    </a>
-                                    <div className="product-price">
-                                        <div>
-                                            {formatCurrency(product.price)}
+                    {
+                        !this.props.products ?
+                            <div>Loading....!</div>
+                            :
+                            <ul className='products'>
+                                {this.props.products.map((product) => (
+
+                                    <li key={product._id}>
+                                        <div className="product">
+                                            <a href={"#" + product._id} onClick={() => this.openModal(product)} >
+                                                <img src={product.image} alt={product.title} />
+                                                <p>
+                                                    {product.title}
+                                                </p>
+                                            </a>
+                                            <div className="product-price">
+                                                <div>
+                                                    {formatCurrency(product.price)}
+                                                </div>
+                                                <button
+                                                    className='button primary'
+                                                    onClick={() => this.props.addToCart(product)}
+                                                >
+                                                    Add to Cart
+                                                </button>
+                                            </div>
                                         </div>
-                                        <button
-                                            className='button primary'
-                                            onClick={() => this.props.addToCart(product)}
-                                        >
-                                            Add to Cart
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
+                                    </li>
 
-                        ))}
-                    </ul>
+                                ))}
+                            </ul>
+
+                    }
 
                 </Fade>
 
@@ -113,3 +126,8 @@ export default class Products extends Component {
         )
     }
 }
+
+export default connect((state) => ({
+    products: state.products.filteredItems
+}),
+    { fetchProducts, addToCart })(Products)
